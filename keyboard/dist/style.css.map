@@ -1,1 +1,1 @@
-{"version":3,"file":"style.css","mappings":"AAAA,EACE,SACF","sources":["webpack:///./src/css/style.css"],"sourcesContent":["p {\n  color: red;\n}\n"],"names":[],"sourceRoot":""}
+{"version":3,"file":"style.css","mappings":"AAAA,IAGE,oBAAqB,CADrB,YAAa,CADb,WAGF","sources":["webpack:///./src/css/style.css"],"sourcesContent":["div {\n  width: 100px;\n  height: 100px;\n  background-color: red;\n}\n"],"names":[],"sourceRoot":""}
