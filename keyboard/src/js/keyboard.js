@@ -1,5 +1,6 @@
 export class Keyboard {
   #switchEl; // Private class fields
+  #fontSelectEl;
   constructor() {
     this.#assignElement();
     this.#addEvent();
@@ -7,6 +8,7 @@ export class Keyboard {
 
   #assignElement() {
     this.#switchEl = document.getElementById("switch");
+    this.#fontSelectEl = document.getElementById("font");
   }
 
   #addEvent() {
@@ -15,6 +17,9 @@ export class Keyboard {
         "theme",
         event.target.checked ? "dark-mode" : ""
       );
+    });
+    this.#fontSelectEl.addEventListener("change", (event) => {
+      document.body.style.fontFamily = event.target.value;
     });
   }
 }
