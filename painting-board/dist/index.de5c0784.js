@@ -19,6 +19,9 @@ class PaintingBoard {
         this.brushSliderEl = this.brushPanelEl.querySelector("#brushSize");
         this.brushSizePreviewEl = this.brushPanelEl.querySelector("#brushSizePreview");
         this.eraserEl = this.toolbarEl.querySelector("#eraser");
+        this.navigatorEl = this.toolbarEl.querySelector("#navigator");
+        this.navigatorImageContainerEl = this.containerEl.querySelector("#imgNav");
+        this.navigatorImageEl = this.navigatorImageContainerEl.querySelector("#canvasImg");
     }
     initContext() {
         this.context = this.canvasEl.getContext("2d"); // canvas 초기화
@@ -36,18 +39,28 @@ class PaintingBoard {
         this.colorPickerEl.addEventListener("input", this.onChangeColor.bind(this));
         this.canvasEl.addEventListener("mouseout", this.onMouseOut.bind(this));
         this.eraserEl.addEventListener("click", this.onClickEraser.bind(this));
+        this.navigatorEl.addEventListener("click", this.onClickNavigator.bind(this));
+    }
+    onClickNavigator(event) {
+        event.currentTarget.classList.toggle("active");
+        this.navigatorImageContainerEl.classList.toggle("hide");
+        this.updateNavigator();
+    }
+    updateNavigator() {
+        this.navigatorImageEl.src = this.canvasEl.toDataURL();
     }
     onClickEraser(event) {
         const isActive = event.currentTarget.classList.contains("active");
         this.MODE = isActive ? "NONE" : "ERASER";
         this.canvasEl.style.cursor = isActive ? "default" : "crosshair";
         this.brushPanelEl.classList.add("hide");
-        this.eraserEl.classList.toggle("active");
+        event.currentTarget.classList.toggle("active");
         this.brushEl.classList.remove("active");
     }
     onMouseOut() {
         if (this.MODE === "NONE") return;
         this.isMouseDown = false;
+        this.updateNavigator();
     }
     onChangeColor(event) {
         this.brushSizePreviewEl.style.backgroundColor = event.target.value;
@@ -68,7 +81,7 @@ class PaintingBoard {
         this.MODE = isActive ? "NONE" : "BRUSH";
         this.canvasEl.style.cursor = isActive ? "default" : "crosshair";
         this.brushPanelEl.classList.toggle("hide");
-        this.brushEl.classList.toggle("active");
+        event.currentTarget.classList.toggle("active");
         this.eraserEl.classList.remove("active");
     }
     onMouseDown(event) {
@@ -95,6 +108,7 @@ class PaintingBoard {
     onMouseUp() {
         if (this.MODE === "NONE") return;
         this.isMouseDown = false;
+        this.updateNavigator();
     }
 }
 new PaintingBoard();
