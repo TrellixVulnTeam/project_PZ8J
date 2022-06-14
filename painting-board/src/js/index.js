@@ -3,6 +3,8 @@ class PaintingBoard {
   isMouseDown = false;
   eraserColor = "#FFFFFF";
   backgroundColor = "#FFFFFF";
+  isNavigatorVisible = false;
+  undoArray = [];
 
   constructor() {
     this.assignElement();
@@ -26,6 +28,7 @@ class PaintingBoard {
     this.navigatorImageContainerEl = this.containerEl.querySelector("#imgNav");
     this.navigatorImageEl =
       this.navigatorImageContainerEl.querySelector("#canvasImg");
+    this.undoEl = this.toolbarEl.querySelector("#undo");
   }
 
   initContext() {
@@ -53,15 +56,51 @@ class PaintingBoard {
       "click",
       this.onClickNavigator.bind(this)
     );
+    this.undoEl.addEventListener("click", this.onClickUndo.bind(this));
+  }
+
+  onClickUndo() {
+    if (this.undoArray.length === 0) {
+      alert("더이상 취소 불가");
+      return;
+    }
+    let prevDataURL = this.undoArray.pop();
+    let prevImage = new Image();
+    prevImage.onload = () => {
+      this.context.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+      this.context.drawImage(
+        prevImage,
+        0,
+        0,
+        this.canvasEl.width,
+        this.canvasEl.height,
+        0,
+        0,
+        this.canvasEl.width,
+        this.canvasEl.height
+      );
+    };
+    prevImage.src = prevDataURL;
+  }
+
+  saveState() {
+    if (this.undoArray.length > 5) {
+      this.undoArray.shift();
+      this.undoArray.push(this.canvasEl.toDataURL());
+    } else {
+      this.undoArray.push(this.canvasEl.toDataURL());
+    }
   }
 
   onClickNavigator(event) {
+    this.isNavigatorVisible = !event.currentTarget.classList.contains("active");
     event.currentTarget.classList.toggle("active");
     this.navigatorImageContainerEl.classList.toggle("hide");
     this.updateNavigator();
   }
 
   updateNavigator() {
+    if (!this.isNavigatorVisible) return;
     this.navigatorImageEl.src = this.canvasEl.toDataURL();
   }
 
@@ -120,6 +159,7 @@ class PaintingBoard {
       this.context.strokeStyle = this.eraserColor;
       this.context.lineWidth = 50;
     }
+    this.saveState();
   }
 
   onMouseMove(event) {
