@@ -6,6 +6,22 @@ class PaintingBoard {
   isNavigatorVisible = false;
   undoArray = [];
 
+  containerEl;
+  canvasEl;
+  toolbarEl;
+  brushEl;
+  colorPickerEl;
+  brushPanelEl;
+  brushSliderEl;
+  brushSizePreviewEl;
+  eraserEl;
+  navigatorEl;
+  navigatorImageContainerEl;
+  navigatorImageEl;
+  undoEl;
+  clearEl;
+  downloadEl;
+
   constructor() {
     this.assignElement();
     this.initContext();
@@ -30,6 +46,7 @@ class PaintingBoard {
       this.navigatorImageContainerEl.querySelector("#canvasImg");
     this.undoEl = this.toolbarEl.querySelector("#undo");
     this.clearEl = this.toolbarEl.querySelector("#clear");
+    this.downloadEl = this.toolbarEl.querySelector("#download");
   }
 
   initContext() {
@@ -59,6 +76,12 @@ class PaintingBoard {
     );
     this.undoEl.addEventListener("click", this.onClickUndo.bind(this));
     this.clearEl.addEventListener("click", this.onClickClear.bind(this));
+    this.downloadEl.addEventListener("click", this.onClickDownload.bind(this));
+  }
+
+  onClickDownload() {
+    this.downloadEl.href = this.canvasEl.toDataURL("image/jpeg", 1);
+    this.downloadEl.download = "example.jpeg";
   }
 
   onClickClear() {
